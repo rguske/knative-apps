@@ -1,0 +1,33 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  labels:
+    app: guestbook
+    tier: frontend
+  name: guestbook-frontend
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/max-scale: "10"
+        autoscaling.knative.dev/min-scale: "1"
+      labels:
+        app: guestbook
+        tier: frontend
+    spec:
+      containerConcurrency: 1
+      containers:
+      - image: gcr.io/google_samples/gb-frontend:v5
+        name: php-redis
+        ports:
+        - containerPort: 80
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100M
+          limits:
+            cpu: 2
