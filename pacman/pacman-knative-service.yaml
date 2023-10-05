@@ -1,0 +1,30 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  labels:
+    app: pacman
+    tier: frontend
+  name: pacman-frontend
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/max-scale: "10"
+        autoscaling.knative.dev/min-scale: "1"
+      labels:
+        app: pacman
+        tier: frontend
+    spec:
+      containerConcurrency: 1
+      containers:
+      - image: projects.registry.vmware.com/tanzu_ese_poc/rguske/pacman-nodejs-app
+        name: pacman-frontend
+        ports:
+        - containerPort: 80
+#        resources:
+#          requests:
+#            cpu: 100m
+#            memory: 100M
+#          limits:
+#            cpu: 2
